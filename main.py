@@ -126,9 +126,14 @@ class LabelTool:
 
         # get image list
         self.imageDir = os.path.join(r'./Images', '%s' %self.category)
-        self.imageList = glob.glob(os.path.join(self.imageDir, '*.JPG'))
+        self.imageList = []
+        for extension in ['JPG', 'jpg', 'png', 'jpeg']:
+            self.imageList.extend(glob.glob(os.path.join(self.imageDir, '*.'+extension)))
+
+        self.imageList.sort()
+
         if len(self.imageList) == 0:
-            print('No .JPG images found in the specified dir!')
+            print('No images with provided extensions found in the specified dir!')
             return
 
         # default to the 1st image in the collection
@@ -163,6 +168,8 @@ class LabelTool:
                 for (i, line) in enumerate(f):
                     tmp2 = [t.strip() for t in line.split()]
                     tmp = [t for t in tmp2[1:]]
+                    # print(tmp2)
+                    # print(tmp)
                     self.bboxList.append(tuple(tmp))
                     tmpId = self.mainPanel.create_rectangle(int(tmp[1]), int(tmp[2]), int(tmp[3]), int(tmp[4]), width = 2,
                                                             outline = COLORS[tmp[0]])
